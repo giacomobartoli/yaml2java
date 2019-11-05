@@ -1,0 +1,696 @@
+swagger: "2.0"
+info:
+  description: "This swagger shows all the requirements regarding to the API ReST developped in project WindTre Integration Layer"
+  version: 0.4.21
+  title: WindTre Integration Layer
+basePath: "/api/v1"
+schemes:
+  - "http"
+paths:
+  /customers/decrypt:
+    post:
+      summary: "Allows the decryption of the token associated to a customer"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/CustomerDecryptRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/CustomerDecryptResponse"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+        500:
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+        503:
+          description: "Service Unavailable"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+  /customers/msisdn/:msisdn/getUserInfo:
+    get:
+      summary: "Returns active VAS associated with the given msisdn"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "msisdn"
+          description: "Customer telephone mobile number"
+          type: "string"
+          required: true
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/GetUserInfoResponse"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+        500:
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+        503:
+          description: "Service Unavailable"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+  /customers/msisdn/:msisdn/services/:service_id/deactivateSubscription:
+    get:
+      summary: "deactivates the service associated with the service id for given msisdn"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "msisdn"
+          in: "path"
+          description: "Customer telephone mobile number"
+          type: "string"
+          required: true
+        - name: "service_id"
+          in: "path"
+          description: "Customer service id"
+          type: "string"
+          required: true
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/GetDeactivateSubscriptionResponse"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+        500:
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+        503:
+          description: "Service Unavailable"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+  /customers/:customer_code/billings/:billing_number/giveProof:
+    post:
+      summary: "Entering bill payment"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/GiveProofRequest"
+        - name: "customer_code"
+          in: "path"
+          description: "Customer id"
+          type: "string"
+          required: true
+        - name: "billing_number"
+          in: "path"
+          description: "billing number"
+          type: "string"
+          required: true
+      responses:
+        200:
+          description: "OK"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+        500:
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+        503:
+          description: "Service Unavailable"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+  /customers/msisdn/:msisdn/pengine_cache:
+    get:
+      summary: "Provides an abstraction of data sets residing in the pengine-db database, the data is divided into scope (Customer, Service.etc)"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "msisdn"
+          in: "path"
+          description: "Customer telephone mobile number"
+          type: "string"
+          required: true
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/GetCustomerPengineCacheResponse"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+        500:
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+        503:
+          description: "Service Unavailable"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+  /customers/:customer_code/contracts/:contract_code/msisdn/:msisdn/unfolded:
+    get:
+      summary: "Provide information about user profile, as puk and line data"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "customer_code"
+          in: "path"
+          description: "Customer code mobile number"
+          type: "string"
+          required: true
+        - name: "contract_code"
+          in: "path"
+          description: "Contract telephone mobile number"
+          type: "string"
+          required: true
+        - name: "msisdn"
+          in: "path"
+          description: "Customer telephone mobile number"
+          type: "string"
+          required: true
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/GetUnfoldedResponse"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+        500:
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+        503:
+          description: "Service Unavailable"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+  /customers/msisdn/:msisdn/debits_credits:
+    get:
+      summary: "Provide debits and credits information"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "msisdn"
+          in: "path"
+          description: "Customer telephone mobile number"
+          type: "string"
+          required: true
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/GetDebitsCreditsResponse"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+        500:
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+        503:
+          description: "Service Unavailable"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+  /customers/:customer_code/msisdn/:msisdn/rechargeHistory:
+    get:
+      summary: "Provide recharges information"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "customer_code"
+          in: "path"
+          description: "Customer code mobile number"
+          type: "string"
+          required: true
+        - name: "msisdn"
+          in: "path"
+          description: "Customer telephone mobile number"
+          type: "string"
+          required: true
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/GetRechargeHistoryResponse"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+        500:
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+        503:
+          description: "Service Unavailable"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+  /customers/:customer_code/contracts/:contract_code/msisdn/:msisdn/billings:
+    get:
+      summary: "Returns info regarding bills (expired or not)"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "customer_code"
+          in: "path"
+          type: "string"
+          required: true
+          description: ""
+        - name: "contract_code"
+          in: "path"
+          type: "string"
+          required: true
+          description: ""
+        - name: "msisdn"
+          in: "path"
+          description: "Customer telephone mobile number"
+          type: "string"
+          required: true
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/GetBillingsMobileResponse"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+        500:
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+        503:
+          description: "Service Unavailable"
+          schema:
+            $ref: "#/definitions/W3ILControllerErrorResponse"
+definitions:
+  CustomerDecryptRequest:
+    type: "object"
+    required:
+      - customerExtension
+    properties:
+      customerExtension:
+        type: string
+        minLength: 1
+        example: "pUIrTHO7E8VWhZcgPHs9OoYk5apFv2puOY2ftansvaLguyja3Ak/VhQk0dqLpR0k"
+  GiveProofRequest:
+    type: "object"
+    properties:
+      paymentDate:
+        type: string
+        minLength: 1
+        example: "03052019"
+  Subscriptions:
+    type: "array"
+    items:
+      $ref: "#/definitions/Subscription"
+  GetUserInfoResponse:
+    type: "object"
+    properties:
+      subscriptions:
+        $ref: "#/definitions/Subscriptions"
+      payOnDemands:
+        $ref: "#/definitions/Subscriptions"
+  Subscription:
+    type: "object"
+    properties:
+      chargeAmount:
+        type: "number"
+        example: 100
+      serviceId:
+        type: string
+        minLength: 1
+        example: "894120462"
+      serviceName:
+        type: string
+        minLength: 1
+        example: "69.TV NEOMOBILE"
+      servicePrice:
+        type: "number"
+        example: 100
+      subscriptionDate:
+        type: "string"
+        format: "date-time"
+        example: "2018-03-18T08:03:41Z"
+      transactionId:
+        type: string
+        minLength: 1
+        example: "1519599628"
+    required:
+      - chargeAmount
+      - serviceId
+      - serviceName
+      - servicePrice
+      - subscriptionDate
+      - transactionId
+  CustomerDecryptResponse:
+    type: "object"
+    properties:
+      customerCodeDigital:
+        type: string
+        minLength: 1
+        example: "123"
+      msisdn:
+        $ref: "#/definitions/Msisdn"
+      customerCode:
+        type: string
+        minLength: 1
+        example: "1.10824893"
+      contractCode:
+        type: string
+        minLength: 1
+        example: "1447496865233"
+    required:
+      - msisdn
+  GetDeactivateSubscriptionResponse:
+    type: "object"
+    properties:
+      serviceId:
+        type: string
+        minLength: 1
+        example: "571000023"
+      serviceName:
+        type: string
+        minLength: 1
+        example: "MUSIKDATE"
+  GetCustomerPengineCacheResponse:
+    type: "object"
+    properties:
+      dataUltimaFattura:
+        $ref: "#/definitions/DateIso8601Pattern"
+      refundEverReiceved:
+        type: "boolean"
+        example: false
+      age:
+        type: "integer"
+      cases:
+        $ref: "#/definitions/Cases"
+      stato:
+        type: "object"
+        properties:
+          sollecitato:
+            type: "boolean"
+          sospeso:
+            type: "boolean"
+        required:
+          - sollecitato
+          - sospeso
+    required:
+      - age
+      - cases
+      - stato
+  Cases:
+    type: "array"
+    items:
+      $ref: "#/definitions/Case"
+  Case:
+    type: "object"
+    properties:
+      idCase:
+        type: string
+        minLength: 1
+      cdTripletta:
+        type: string
+        minLength: 1
+      cdStatus:
+        type: string
+        minLength: 1
+      idFattura:
+        type: string
+        minLength: 1
+      tstCaseStart:
+        type: "string"
+        format: "date-time"
+        example: "2018-03-18 10:02:30.69"
+      tstCaseEnd:
+        type: "string"
+        format: "date-time"
+        example: "2018-03-18 10:02:30.69"
+    required:
+      - idCase
+      - cdTripletta
+      - cdStatus
+      - idFattura
+      - tstCaseStart
+      - tstCaseEnd
+  GetBillingsMobileResponse:
+    type: "object"
+    properties:
+      bills:
+        type: "array"
+        items:
+          $ref: "#/definitions/BillMobile"
+  GetDebitsCreditsResponse:
+    type: "object"
+    properties:
+      debitCredits:
+        type: "array"
+        items:
+          $ref: "#/definitions/DebitCredit"
+      isRecentOptionRenewal:
+        type: "boolean"
+      isTotalRenewalOption:
+        type: "boolean"
+    required:
+      - debitCredits
+      - isRecentOptionRenewal
+      - isTotalRenewalOption
+  DebitCredit:
+    type: "object"
+    properties:
+      operation:
+        type: string
+        minLength: 1
+        example: "Costo mensile All Inclusive Super"
+      dateRequest:
+        type: "string"
+        format: "date-time"
+        example: "2018-12-16T00:03:32+01:00"
+      dateEffective:
+        type: "string"
+        format: "date-time"
+        example: "2018-12-16T00:16:36+01:00"
+      operationAmount:
+        type: "number"
+        example: -10.89
+      effectiveAmount:
+        type: "number"
+        example: -10.89
+      creditResidual:
+        type: "number"
+        example: 4.87
+    required:
+      - operation
+      - dateRequest
+      - dateEffective
+      - operationAmount
+      - effectiveAmount
+  GetUnfoldedResponse:
+    type: "object"
+    properties:
+      isSpecialRopzActive:
+        type: "boolean"
+      isShapingCounterNazResidualPositive:
+        type: "boolean"
+      isShapingCounterNazResidualSpecialFinished:
+        type: "boolean"
+      isCreditBalanceTerminated:
+        type: "boolean"
+      isGracePeriodPresent:
+        type: "boolean"
+      isBundleVoiceExisting:
+        type: "boolean"
+      isBundleSmsExisting:
+        type: "boolean"
+      isBundleDatiExisting:
+        type: "boolean"
+      lineTariffplanName:
+        type: string
+        minLength: 1
+        example: "Super Senza Scatto 2011"
+      puk:
+        type: "string"
+        minLength: 4
+        maxLength: 8
+        example: "00000000"
+      creditResidual:
+        type: number
+    required:
+      - isSpecialRopzActive
+      - isShapingCounterNazResidualPositive
+      - isShapingCounterNazResidualSpecialFinished
+      - isCreditBalanceTerminated
+      - isGracePeriodPresent
+      - isBundleVoiceExisting
+      - isBundleSmsExisting
+      - isBundleDatiExisting
+      - lineTariffplanName
+      - puk
+  GetRechargeHistoryResponse:
+    type: "object"
+    properties:
+      rechargeHistory:
+        type: "array"
+        items:
+          $ref: "#/definitions/GetRechargeHistoryCollection"
+      isRecentRechargeDate:
+        type: "boolean"
+    required:
+      - rechargeHistory
+      - isRecentRechargeDate
+  Msisdn:
+    type: string
+    minLength: 1
+  GetRechargeHistoryCollection:
+    type: "object"
+    properties:
+      type:
+        type: string
+        minLength: 1
+        example: "Altri canali"
+      msisdn:
+        $ref: "#/definitions/Msisdn"
+      date:
+        type: "string"
+        format: "date-time"
+        example: "2019-04-08T20:08:10.000+02:00"
+      amount:
+        type: "number"
+        example: 10
+    required:
+      - type
+      - msisdn
+      - date
+      - amount
+  BillMobile:
+    type: "object"
+    properties:
+      billingNumber:
+        type: string
+        minLength: 1
+        example: "8102858645"
+      amount:
+        type: "number"
+        example: 31.95
+      amountDue:
+        type: "number"
+        example: 31.95
+      dateStartPeriod:
+        type: "string"
+        format: "date-time"
+        example: "2015-02-11T00:00:00.000+01:00"
+      dateEndPeriod:
+        type: "string"
+        format: "date-time"
+        example: "2015-04-10T00:00:00.000+02:00"
+      dateEmission:
+        type: string
+        minLength: 1
+        example: "APR"
+      dateEmissionExt:
+        $ref: "#/definitions/DateIso8601Pattern"
+      dateExpired:
+        type: "string"
+        example: "APR"
+      dateExpiredExt:
+        $ref: "#/definitions/DateIso8601Pattern"
+      status:
+        type: string
+        minLength: 1
+        example: "Pagata"
+      payable:
+        type: "boolean"
+        example: true
+      downloadUrl:
+        type: string
+        minLength: 1
+      paymentProof:
+        type: "boolean"
+        example: false
+    required:
+      - billingNumber
+      - amount
+      - dateStartPeriod
+      - dateEndPeriod
+      - dateEmission
+      - dateEmissionExt
+      - dateExpired
+      - dateExpiredExt
+      - status
+      - payable
+      - paymentProof
+  DateIso8601Pattern:
+    type: "string"
+    pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    example: "2015-04-13"
+  W3ILControllerErrorResponse:
+    type: "object"
+    properties:
+      error_title:
+        $ref: "#/definitions/W3ILControllerErrorTitle"
+      error_detail:
+        type: string
+        minLength: 1
+    required:
+      - error_detail
+      - error_title
+  W3ILControllerErrorTitle:
+    type: string
+    x-extensible-enum:
+      - INTERNAL_ERROR
+      - INVALID_REQUEST
+      - INVALID_RESPONSE

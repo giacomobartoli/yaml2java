@@ -1,0 +1,431 @@
+swagger: "2.0"
+info:
+  version: 0.5.0
+  title: IBM Watson Orchestrator Webservices
+  description: RESTful WebServices provided by IBM Watson Orchestrator for WindTre
+basePath: /api/v1
+schemes:
+  - https
+securityDefinitions:
+  basicAuth:
+    type: basic
+security:
+  - basicAuth: []
+paths:
+  /answerstore:
+    post:
+      summary: Send a new version of AnswerStore to update into Watson
+      parameters:
+        - in: body
+          name: body
+          description: "A CSV Text Content (Delimiter: PIPE) containing the AnswerStore"
+          type: string
+          required: true
+  /conversations/{conversation_id}/messages/{message_id}:
+    post:
+      summary: Send messages or technical messages from User to IBM Watson
+      parameters:
+        - in: path
+          name: conversation_id
+          required: true
+          schema:
+            $ref: "#/definitions/W3ConversationId"
+        - in: path
+          name: message_id
+          required: true
+          schema:
+            $ref: "#/definitions/MessageId"
+        - in: body
+          name: body
+          schema:
+            $ref: "#/definitions/PostConversationRequest"
+      responses:
+        "200":
+          schema:
+            $ref: "#/definitions/PostConversationResponse"
+        "400":
+          schema:
+            $ref: "#/definitions/ControllerErrorResponse"
+        "401":
+          schema:
+            $ref: "#/definitions/ControllerErrorResponse"
+        "500":
+          schema:
+            $ref: "#/definitions/ControllerErrorResponse"
+        "503":
+          schema:
+            $ref: "#/definitions/ControllerErrorResponse"
+definitions:
+  Mcc:
+    type: number
+    example: 222
+  Nc:
+    type: number
+    example: 88
+  BarringCategory:
+    type: object
+    properties:
+      categoryId:
+        type: string
+        minLength: 1
+        example: "SPEG_1"
+      categoryDesc:
+        type: string
+        minLength: 1
+        example: "SMS Televoti"
+      status:
+        type: boolean
+    required:
+      - categoryId
+      - cateforyDesc
+      - status
+  BarringCategories:
+    type: array
+    items:
+      $ref: "#/definitions/BarringCategory"
+  ButtonElementWidget:
+    type: object
+    properties:
+      label:
+        type: string
+        minLength: 1
+      value:
+        type: string
+        minLength: 1
+    required:
+      - label
+      - value
+  ButtonElementsWidget:
+    type: array
+    items:
+      $ref: "#/definitions/ButtonElementWidget"
+  PostConversationResponseWidget:
+    oneOf:
+      - $ref: "#/definitions/ButtonListWidget"
+      - $ref: "#/definitions/CalendarWidget"
+  DateIso8601Pattern:
+    type: "string"
+    pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    example: "2015-04-13"
+  WidgetContentType:
+    type: string
+    x-extensible-enum:
+      - CALENDAR
+  CalendarWidgetElement:
+    type: object
+    properties:
+      type:
+        $ref: "#/definitions/WidgetContentType"
+      minValue:
+        $ref: "#/definitions/DateIso8601Pattern"
+      maxValue:
+        $ref: "#/definitions/DateIso8601Pattern"
+      isMandatory:
+        type: boolean
+    required:
+      - type
+  WidgetAnswerType:
+    type: string
+    x-extensible-enum:
+      - CALENDAR_ANSWER
+  CalendarWidgetElementAnswer:
+    type: object
+    properties:
+      type:
+        $ref: "#/definitions/WidgetAnswerType"
+      category:
+        type: string
+        minLength: 1
+      label:
+        $ref: "#/definitions/TextMessage"
+    required:
+      - type
+      - category
+      - label
+  CalendarWidget:
+    type: object
+    properties:
+      answer:
+        $ref: "#/definitions/CalendarWidgetElementAnswer"
+      content:
+        type: array
+        items:
+          $ref: "#/definitions/CalendarWidgetElement"
+      disableUserInput:
+        type: boolean
+    required:
+      - answer
+      - content
+  ButtonListWidgetType:
+    type: string
+    x-extensible-enum:
+      - ButtonList
+      - CheckList
+  ButtonListWidget:
+    type: object
+    properties:
+      text:
+        type: string
+        minLength: 1
+      type:
+        $ref: "#/definitions/ButtonListWidgetType"
+      items:
+        $ref: "#/definitions/ButtonElementsWidget"
+    required:
+      - text
+      - type
+      - items
+  ContentType:
+    type: string
+    x-extensible-enum:
+      - "application/json"
+      - "text/plan"
+  ControllerErrorTitle:
+    type: string
+    x-extensible-enum:
+      - INTERNAL_ERROR
+      - INVALID_REQUEST
+      - CONVERSATION_CURRENTLY_NOT_AVAILABLE
+      - MESSAGE_ID_ALREADY_USED_OR_INTERNAL_ERROR
+  Credit:
+    type: number
+    example: 3.69
+  HttpMethodEnum:
+    type: string
+    x-extensible-enum:
+      - GET
+      - POST
+      - PUT
+  MessageId:
+    type: string
+    minLength: 36
+    maxLength: 36
+  Channel:
+    oneOf:
+      - $ref: "#/definitions/WindChannel"
+      - $ref: "#/definitions/TreChannel"
+  WindChannel:
+    type: string
+    x-extensible-enum:
+      - "MYWIND_APP"
+      - "MYWIND_WEB"
+  WindCustomer:
+    type: object
+    properties:
+      userId:
+        $ref: "#/definitions/UserId"
+      channel:
+        $ref: "#/definitions/WindChannel"
+      paymentType:
+        $ref: "#/definitions/WindPaymentType"
+      MCC:
+        $ref: "#/definitions/Mcc"
+      NC:
+        $ref: "#/definitions/Nc"
+    required:
+      - channel
+      - paymentType
+      - userId
+  WorkspaceId:
+    type: string
+    example: "03b9a017-0874-43c0-a019-0cb450c860b6"
+    minLength: 36
+    maxLength: 36
+  WorkspaceLabel:
+    type: string
+    example: "Disambiguation"
+    minLength: 1
+    maxLength: 25
+  TreChannel:
+    type: string
+    x-extensible-enum:
+      - "TRE_APP"
+      - "TRE_WEB"
+  Pin:
+    type: string
+    example: "12345678"
+    minLength: 4
+    maxLength: 8
+  Puk:
+    type: string
+    example: "12345678"
+    minLength: 4
+    maxLength: 8
+  TreCustomer:
+    type: object
+    properties:
+      userId:
+        $ref: "#/definitions/UserId"
+      channel:
+        $ref: "#/definitions/TreChannel"
+      credit:
+        $ref: "#/definitions/Credit"
+      pin:
+        $ref: "#/definitions/Pin"
+      puk:
+        $ref: "#/definitions/Puk"
+      paymentType:
+        $ref: "#/definitions/TrePaymentType"
+      barringCategories:
+        $ref: "#/definitions/BarringCategories"
+      isNegativeEventExisting:
+        type: boolean
+      isCollectionExisting:
+        type: boolean
+      servicePremium:
+        $ref: "#/definitions/ServicePremium"
+    required:
+      - userId
+      - channel
+      - pin
+      - puk
+      - paymentType
+      - barringCategories
+      - isNegativeEventExisting
+      - isCollectionExisting
+      - servicePremium
+  Customer:
+    oneOf:
+      - $ref: "#/definitions/WindCustomer"
+      - $ref: "#/definitions/TreCustomer"
+  PostConversationRequest:
+    type: object
+    properties:
+      message:
+        $ref: "#/definitions/TextMessage"
+      w3_api_response:
+        $ref: "#/definitions/W3ApiResponse"
+      customer:
+        $ref: "#/definitions/Customer"
+  PostConversationResponse:
+    type: object
+    properties:
+      message:
+        $ref: "#/definitions/TextMessage"
+      w3_api_request:
+        $ref: "#/definitions/W3ApiRequest"
+      widget:
+        $ref: "#/definitions/PostConversationResponseWidget"
+      application:
+        $ref: "#/definitions/WorkspaceLabel"
+      category:
+        type: string
+        minLength: 1
+  ControllerErrorResponse:
+    type: object
+    properties:
+      error_title:
+        $ref: "#/definitions/ControllerErrorTitle"
+      error_detail:
+        type: string
+        minLength: 1
+    required:
+      - error_title
+  WindPaymentType:
+    type: string
+    x-extensible-enum:
+      - PRE
+      - POST
+      - FISSO
+  TrePaymentType:
+    type: string
+    x-extensible-enum:
+      - PRE
+      - POST
+  ServicePremium:
+    type: array
+    items:
+      $ref: "#/definitions/ServicePremiumItem"
+  ServicePremiumItem:
+    type: object
+    properties:
+      name:
+        type: string
+        minLength: 1
+      serviceId:
+        type: string
+        minLength: 1
+      start:
+        type: string
+        format: "date-time"
+        example: "2015-04-10T00:00:00.000+02:00"
+      end:
+        type: string
+        format: "date-time"
+        example: "2015-04-10T00:00:00.000+02:00"
+      subscriptionStatus:
+        type: boolean
+    required:
+      - name
+      - serviceId
+      - start
+      - end
+      - subscriptionStatus
+  TechnicalMessage:
+    type: string
+    x-extensible-enum:
+      - HANDOFF
+  TextMessage:
+    type: string
+    minLength: 1
+  UserId:
+    type: string
+    minLength: 64
+    maxLength: 64
+  W3ApiName:
+    type: string
+  W3ApiParams:
+    type: object
+    properties:
+      relativeUrl:
+        type: string
+        minLength: 1
+      method:
+        $ref: "#/definitions/HttpMethodEnum"
+      body:
+        type: object
+    required:
+      - relativeUrl
+      - method
+  W3ApiRequest:
+    type: object
+    properties:
+      api_name:
+        $ref: "#/definitions/W3ApiName"
+      api_params:
+        $ref: "#/definitions/W3ApiParams"
+    required:
+      - api_name
+      - api_params
+  W3ApiResponse:
+    type: object
+    properties:
+      api_name:
+        $ref: "#/definitions/W3ApiName"
+      response_content:
+        $ref: "#/definitions/W3ApiResponseContent"
+    required:
+      - api_name
+      - response_content
+  W3ApiResponseContent:
+    type: object
+    properties:
+      status:
+        type: number
+      contentType:
+        $ref: "#/definitions/ContentType"
+      text:
+        type: string
+      json:
+        type: object
+    required:
+      - status
+      - contentType
+  W3ConversationId:
+    type: string
+    minLength: 36
+    maxLength: 36
+consumes:
+  - application/json
+produces:
+  - application/json

@@ -1,0 +1,103 @@
+swagger: "2.0"
+info:
+  version: 0.3.4
+  title: IBM Watson Integration Layer WebServices
+  description: RESTful WebServices provided by IBM Watson Integration Layer for Multi Agent System
+basePath: /api/v1
+schemes:
+  - http
+securityDefinitions:
+  basicAuth:
+    type: basic
+security:
+  - basicAuth: []
+paths:
+  /conversations/{conversation_id}/messages/{message_id}:
+    post:
+      summary: Send messages or technical messages from User to IBM Watson
+      parameters:
+        - in: path
+          name: conversation_id
+          required: true
+          schema:
+            $ref: "api_iwo.yaml#/definitions/W3ConversationId"
+        - in: path
+          name: message_id
+          required: true
+          schema:
+            $ref: "api_iwo.yaml#/definitions/MessageId"
+        - in: body
+          name: body
+          schema:
+            $ref: "#/definitions/WilPostConversationRequest"
+      responses:
+        "200":
+          schema:
+            $ref: "#/definitions/WilPostConversationResponse"
+        "400":
+          schema:
+            $ref: "api_iwo.yaml#/definitions/ControllerErrorResponse"
+        "401":
+          schema:
+            $ref: "api_iwo.yaml#/definitions/ControllerErrorResponse"
+        "500":
+          schema:
+            $ref: "api_iwo.yaml#/definitions/ControllerErrorResponse"
+        "503":
+          schema:
+            $ref: "api_iwo.yaml#/definitions/ControllerErrorResponse"
+definitions:
+  CustomerExtension:
+    type: string
+    minLength: 1
+  TechnicalMessage:
+    $ref: "api_iwo.yaml#/definitions/TechnicalMessage"
+  Channel:
+    $ref: api_iwo.yaml#/definitions/TextMessage
+  WilCustomer:
+    type: object
+    properties:
+      channel:
+        $ref: "api_iwo.yaml#/definitions/Channel"
+      paymentType:
+        $ref: "api_iwo.yaml#/definitions/PaymentType"
+      customerExtension:
+        $ref: "#/definitions/CustomerExtension"
+      MCC:
+        $ref: "api_iwo.yaml#/definitions/Mcc"
+      NC:
+        $ref: "api_iwo.yaml#/definitions/Nc"
+    required:
+      - channel
+      - paymentType
+      - customerExtension
+  Channel:
+    type: object
+    properties:
+      message:
+        $ref: "#/definitions/TextMessage"
+      technical_message:
+        $ref: "#/definitions/TechnicalMessage"
+      customer:
+        $ref: "#/definitions/WilCustomer"
+    required:
+      - customer
+  WilPostConversationResponse:
+    type: object
+    properties:
+      message:
+        $ref: "#/definitions/TextMessage"
+      technical_message:
+        $ref: "#/definitions/TechnicalMessage"
+      widget:
+        $ref: "api_iwo.yaml#/definitions/ButtonListWidget"
+      application:
+        type: string
+        minLength: 1
+      category:
+        type: string
+        minLength: 1
+consumes:
+  - application/json
+produces:
+  - application/json
